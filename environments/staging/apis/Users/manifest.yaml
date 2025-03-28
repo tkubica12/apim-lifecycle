@@ -1,0 +1,25 @@
+apis:
+- openApiFile: users.json
+  policiesFile: users-policy.yaml
+  name: Users
+  shortName: users
+  prefix: users
+  version: 2025-01-01
+  revision: 1
+  is_active_revision: true
+- openApiFile: users.json
+  policiesFile: users-policy.yaml
+  name: Users2
+  shortName: users2
+  prefix: users2
+  version: 2025-01-01
+  revision: 1
+  is_active_revision: true
+- openApiFile: users.json
+  policiesFile: users-policy.yaml
+  name: Users2
+  shortName: users2
+  prefix: users2
+  version: 2025-01-01
+  revision: 2
+  is_active_revision: false
