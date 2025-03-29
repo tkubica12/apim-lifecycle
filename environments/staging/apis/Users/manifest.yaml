@@ -14,7 +14,7 @@ apis:
   prefix: users2
   version: 2025-01-01
   revision: 1
-  is_active_revision: true
+  is_active_revision: false
 - openApiFile: users.json
   policiesFile: users-policy.yaml
   name: Users2
@@ -22,4 +22,4 @@ apis:
   prefix: users2
   version: 2025-01-01
   revision: 2
-  is_active_revision: false
+  is_active_revision: true

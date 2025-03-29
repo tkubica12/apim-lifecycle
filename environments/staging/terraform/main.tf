@@ -55,7 +55,8 @@ module "apis" {
   location            = azurerm_resource_group.main.location
   prefix              = var.prefix
   api_management_name = module.apim.api_management_name
-  api_name            = each.value.shortName
+  api_management_id   = module.apim.api_management_id
+  api_name            = "${each.value.shortName};rev=${each.value.revision}"
   path                = each.value.prefix
   display_name        = each.value.name
   revision            = each.value.revision

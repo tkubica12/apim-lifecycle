@@ -58,4 +58,9 @@ variable "is_active_revision" {
   description = "Indicates if this is the active revision for the API"
 }
 
+variable "api_management_id" {
+  description = "The ID of the API Management service"
+  type        = string
+}
+
 
