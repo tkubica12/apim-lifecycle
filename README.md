@@ -72,10 +72,16 @@ apis:
   name: Users
   shortName: users
   prefix: users
-  version: 2025-01-01
+  version: "2025-01-01"
   revision: 1
   is_active_revision: true
 ```
+
+### Versioning and Revision Information
+
+APIs are versioned using a combination of `version` and `revision` fields in the manifest. The `version` field represents the API version (e.g., "2025-01-01"), while the `revision` field tracks changes within a version. The `is_active_revision` field indicates whether the revision is active.
+
+Terraform modules automatically handle version sets and associate APIs with their respective versions and revisions.
 
 ## Usage
 
@@ -101,7 +107,6 @@ You can also deploy all APIs in the staging environment by running:
 cd environments/staging/apis
 terragrunt run-all apply
 ```
-
 
 ### Updating APIs
 

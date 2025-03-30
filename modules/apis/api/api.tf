@@ -6,12 +6,14 @@ resource "azapi_resource" "api" {
 
   body = {
     properties = {
-      displayName = var.display_name
-      apiRevision = var.revision
-      path        = var.path
-      protocols   = ["https"]
-      format      = "openapi+json"
-      value       = var.openapi_content
+      displayName     = var.display_name
+      apiRevision     = var.revision
+      path            = var.path
+      protocols       = ["https"]
+      format          = "openapi+json"
+      value           = var.openapi_content
+      apiVersionSetId = var.version_set_id
+      apiVersion      = var.api_version
     }
   }
 }

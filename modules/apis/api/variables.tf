@@ -63,4 +63,13 @@ variable "api_management_id" {
   type        = string
 }
 
+variable "api_version" {
+  description = "Version of the API Management service"
+  type        = string
+}
+
+variable "version_set_id" {
+  type        = string
+  description = "The ID of the API version set"
+}
 
