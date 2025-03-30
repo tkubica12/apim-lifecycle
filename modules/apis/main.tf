@@ -20,24 +20,15 @@ data "azurerm_client_config" "current" {}
 data "azuread_client_config" "current" {}
 
 locals {
-  manifest = yamldecode(file(var.manifest))
-  apis     = local.manifest.apis
+  manifest         = yamldecode(file(var.manifest))
+  apis             = local.manifest.apis
   unique_api_names = distinct([for api in local.apis : api.shortName])
-}
-
-// Deploy version sets
-resource "azapi_resource" "version_set" {
-  for_each  = toset(local.unique_api_names)
-  type      = "Microsoft.ApiManagement/service/apiVersionSets@2024-06-01-preview"
-  name      = "${each.value}-version-set"
-  parent_id = var.api_management_id
-
-  body = {
-    properties = {
-      versioningScheme  = "Header"
-      versionHeaderName = "api-version"
-      displayName       = each.value
-    }
+  
+  # Group duplicate keys with the grouping operator "..."
+  unique_api_ids = {
+    for api_key, api_module in module.api : 
+      api_module.short_name => api_module.api_id ...
+      if api_module.is_active
   }
 }
 
