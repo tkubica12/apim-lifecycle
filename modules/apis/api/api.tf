@@ -1,3 +1,4 @@
+# Deploy API
 resource "azapi_resource" "api" {
   type      = "Microsoft.ApiManagement/service/apis@2024-06-01-preview"
   name      = var.api_name

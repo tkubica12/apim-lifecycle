@@ -1,11 +1,3 @@
-variable "resource_group_name" {
-  type        = string
-  default     = "zentiva-rg"
-  description = <<EOF
-Name of the resource group to deploy resources.
-EOF  
-}
-
 variable "location" {
   type        = string
   description = <<EOF

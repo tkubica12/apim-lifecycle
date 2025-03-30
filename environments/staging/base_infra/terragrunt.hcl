@@ -1,32 +1,11 @@
 terraform {
-  required_providers {
-    azurerm = {
-      source  = "hashicorp/azurerm"
-      version = "~>4"
-    }
-    random = {
-      source  = "hashicorp/random"
-      version = "~>3"
-    }
-    archive = {
-      source  = "hashicorp/archive"
-      version = "~>2"
-    }
-    azapi = {
-      source  = "Azure/azapi"
-      version = "~>2"
-    }
-    azuread = {
-      source  = "hashicorp/azuread"
-      version = "~>3"
-    }
-    time = {
-      source  = "hashicorp/time"
-      version = "~>0"
-    }
-  }
+  source = "../../../modules/base_infra"
 }
 
+generate "provider" {
+  path      = "provider.tf"
+  if_exists = "overwrite_terragrunt"
+  contents  = <<EOF
 provider "azurerm" {
   subscription_id = "673af34d-6b28-41dc-bc7b-f507418045e6"
   features {
@@ -48,8 +27,11 @@ provider "azurerm" {
     }
   }
 }
-
-provider "random" {
-  # Configuration options
+EOF
 }
 
+inputs = {
+  location            = "germanywestcentral"
+  prefix              = "apim-staging"
+  vnet_range          = "10.0.0.0/16"
+}
