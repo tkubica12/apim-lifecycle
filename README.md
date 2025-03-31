@@ -1,6 +1,6 @@
 # Azure API Management lifecycle
 
-This repository demonstrates managing the lifecycle of Azure API Management (APIM) APIs using Terraform and Terragrunt. It provides a structured approach to maintain APIs across different environments (e.g., staging, production).
+This repository demonstrates managing the lifecycle of Azure API Management (APIM) APIs and products using Terraform and Terragrunt. It provides a structured approach to maintain APIs and products across different environments (e.g., staging, production).
 
 ## Project Structure
 
@@ -11,8 +11,8 @@ This repository demonstrates managing the lifecycle of Azure API Management (API
 │   └── staging/                       # Staging environment
 │       ├── apis/                      # API configurations for staging
 │       │   ├── terragrunt.hcl         # Parent Terragrunt configuration for APIs
-│       │   └── Users/                 # Example API implementation
-│       │       ├── manifest.yaml      # API definition manifest
+│       │   └── UserManagement/        # Example API implementation
+│       │       ├── manifest.yaml      # API and product definition manifest
 │       │       ├── terragrunt.hcl     # Terragrunt configuration for this API
 │       │       ├── users.json         # OpenAPI specification file
 │       │       └── users-policy.yaml  # API policies definition
@@ -31,10 +31,12 @@ This repository demonstrates managing the lifecycle of Azure API Management (API
     │   ├── main.tf
     │   ├── outputs.tf
     │   └── variables.tf
-    ├── apis/                          # APIs module
+    ├── apis/                          # APIs and products module
     │   ├── main.tf
     │   ├── outputs.tf
+    │   ├── product.tf                 # Product resource definition
     │   ├── variables.tf
+    │   ├── version_set.tf             # API version set resource definition
     │   └── api/                       # Individual API module
     │       ├── api.tf
     │       ├── main.tf
@@ -50,14 +52,15 @@ This repository demonstrates managing the lifecycle of Azure API Management (API
 
 ## Key Components
 
-- **Terraform Modules**: Reusable Terraform modules for APIM, APIs, and infrastructure components.
-- **Terragrunt**: Used for managing Terraform configurations across multiple environments, maintaining separate state files for each API.
+- **Terraform Modules**: Reusable Terraform modules for APIM, APIs, products, and infrastructure components.
+- **Terragrunt**: Used for managing Terraform configurations across multiple environments, maintaining separate state files for each API and product.
 - **OpenAPI Specifications**: APIs are defined using OpenAPI 3.0.3 specifications.
-- **Manifest Files**: YAML files that describe API configurations, including references to OpenAPI specs and policies.
+- **Manifest Files**: YAML files that describe API and product configurations, including references to OpenAPI specs, policies, and product metadata.
 
-## Manifest-Based API Configuration
+## Manifest-Based Configuration
 
-Each API is configured using a manifest file (manifest.yaml) that includes:
+Each API and product is configured using a manifest file (manifest.yaml) that includes:
+- Product metadata (name, display name, description, terms, approval requirements)
 - OpenAPI specification file reference
 - Policy file reference (for API-specific policies)
 - API metadata (name, short name, prefix)
@@ -66,6 +69,13 @@ Each API is configured using a manifest file (manifest.yaml) that includes:
 
 Example manifest:
 ```yaml
+productName: UserManagement
+productDisplayName: User Management APIs
+productDescription: User Management API for managing user accounts and profiles.
+productTerms: |
+  By using this API, you agree to the terms and conditions set forth by the API provider.
+  Please refer to the API documentation for more details.
+approvalRequired: true
 apis:
 - openApiFile: users.json
   policiesFile: users-policy.yaml
@@ -76,6 +86,10 @@ apis:
   revision: 1
   is_active_revision: true
 ```
+
+### Products
+
+Products group APIs and define their access policies. The `product.tf` module handles the creation of products and their association with APIs. Products are defined in the manifest file and include metadata such as `productName`, `productDisplayName`, `productDescription`, and `productTerms`.
 
 ### Versioning and Revision Information
 
@@ -91,26 +105,26 @@ Terraform modules automatically handle version sets and associate APIs with thei
 - Terragrunt
 - Azure CLI (authenticated)
 
-### Deploying APIs
+### Deploying APIs and Products
 
 Navigate to the desired environment and apply Terragrunt:
 
 ```bash
-cd environments/staging/apis/Users
+cd environments/staging/apis/UserManagement
 terragrunt init
 terragrunt apply
 ```
 
-You can also deploy all APIs in the staging environment by running:
+You can also deploy all APIs and products in the staging environment by running:
 
 ```bash
 cd environments/staging/apis
 terragrunt run-all apply
 ```
 
-### Updating APIs
+### Updating APIs or Products
 
-Update the OpenAPI specification (users.json) or policies (users-policy.yaml) and re-apply Terragrunt to update the API:
+Update the OpenAPI specification (users.json), policies (users-policy.yaml), or product metadata in the manifest (manifest.yaml) and re-apply Terragrunt to update the API or product:
 
 ```bash
 terragrunt apply
