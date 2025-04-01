@@ -61,6 +61,7 @@ This repository demonstrates managing the lifecycle of Azure API Management (API
 
 Each API and product is configured using a manifest file (manifest.yaml) that includes:
 - Product metadata (name, display name, description, terms, approval requirements)
+- Product-level policy file reference
 - Backend configurations (name, URL)
 - OpenAPI specification file reference
 - Policy file reference (for API-specific policies)
@@ -76,13 +77,14 @@ productDescription: User Management API for managing user accounts and profiles.
 productTerms: |
   By using this API, you agree to the terms and conditions set forth by the API provider.
   Please refer to the API documentation for more details.
+productPolicyFile: product.policy.xml
 approvalRequired: true
 backends:
 - name: httpbin
   url: https://httpbin.org/
 apis:
 - openApiFile: users.json
-  policiesFile: users-policy.yaml
+  policyFile: users.policy.xml
   name: Users
   shortName: users
   prefix: users
@@ -90,6 +92,15 @@ apis:
   revision: 1
   is_active_revision: true
 ```
+
+### Policies
+
+Policies can be applied at both the product and API levels to enforce rules, transformations, or restrictions.
+
+- **Product-Level Policies**: Defined using the `productPolicyFile` attribute in the manifest. These policies apply to all APIs within the product.
+- **API-Level Policies**: Defined using the `policyFile` attribute for each API in the manifest. These policies apply specifically to the individual API.
+
+Both policy files should be written in XML format, following the Azure API Management policy schema.
 
 ### Backends
 
@@ -117,7 +128,7 @@ Terraform modules automatically handle version sets and associate APIs with thei
 - Terragrunt
 - Azure CLI (authenticated)
 
-### Deploying APIs and Products
+### Deploying APIs, Products, and Policies
 
 Navigate to the desired environment and apply Terragrunt:
 
@@ -127,6 +138,8 @@ terragrunt init
 terragrunt apply
 ```
 
+This will deploy the APIs, products, and their associated policies as defined in the manifest.
+
 You can also deploy all APIs and products in the staging environment by running:
 
 ```bash
@@ -134,9 +147,9 @@ cd environments/staging/apis
 terragrunt run-all apply
 ```
 
-### Updating APIs or Products
+### Updating APIs, Products, or Policies
 
-Update the OpenAPI specification (users.json), policies (users-policy.yaml), or product metadata in the manifest (manifest.yaml) and re-apply Terragrunt to update the API or product:
+Update the OpenAPI specification (users.json), policies (users.policy.xml or product.policy.xml), or product metadata in the manifest (manifest.yaml) and re-apply Terragrunt to update the API, product, or policies:
 
 ```bash
 terragrunt apply
