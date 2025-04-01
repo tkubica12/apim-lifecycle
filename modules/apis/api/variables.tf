@@ -48,6 +48,11 @@ variable "openapi_content" {
   description = "Content of the OpenAPI specification"
 }
 
+variable "policy_content" {
+  type        = string
+  description = "Content of the API policy" 
+}
+
 variable "api_name" {
   type        = string
   description = "Name for the API resource"

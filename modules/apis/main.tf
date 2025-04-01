@@ -47,6 +47,7 @@ module "api" {
   revision            = each.value.revision
   is_active_revision  = each.value.is_active_revision
   openapi_content     = file("${var.folder_path}/${each.value.openApiFile}")
+  policy_content      = file("${var.folder_path}/${each.value.policyFile}")
   api_version         = each.value.version
   version_set_id      = azapi_resource.version_set[each.value.shortName].id
 }

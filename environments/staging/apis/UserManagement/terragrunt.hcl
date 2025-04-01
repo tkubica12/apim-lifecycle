@@ -39,11 +39,11 @@ EOF
 }
 
 inputs = {
-  folder_path            = get_terragrunt_dir()
-  manifest               = "${get_terragrunt_dir()}/manifest.yaml"
-  location               = "germanywestcentral"
-  prefix                 = "apim-staging"
-  resource_group_name    = dependency.parent.inputs.resource_group_name
-  api_management_name    = dependency.parent.inputs.api_management_name
-  api_management_id      = dependency.parent.inputs.api_management_id
+  folder_path         = get_terragrunt_dir()
+  manifest            = "${get_terragrunt_dir()}/manifest.yaml"
+  location            = "germanywestcentral"
+  prefix              = "apim-staging"
+  resource_group_name = dependency.parent.inputs.resource_group_name
+  api_management_name = dependency.parent.inputs.api_management_name
+  api_management_id   = dependency.parent.inputs.api_management_id
 }

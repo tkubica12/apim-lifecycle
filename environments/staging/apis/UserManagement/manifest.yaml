@@ -4,13 +4,14 @@ productDescription: User Management API for managing user accounts and profiles.
 productTerms: |
   By using this API, you agree to the terms and conditions set forth by the API provider. 
   Please refer to the API documentation for more details.
+productPolicyFile: product.policy.xml  
 approvalRequired: true
 backends:
 - name: httpbin
   url: https://httpbin.org/
 apis:
 - openApiFile: users.json
-  policiesFile: users-policy.yaml
+  policyFile: users.policy.xml
   name: Users
   shortName: users
   prefix: users
@@ -19,7 +20,7 @@ apis:
   is_active_revision: true
   backendUrl:
 - openApiFile: users.json
-  policiesFile: users-policy.yaml
+  policyFile: users.policy.xml
   name: Users2
   shortName: users2
   prefix: users2
@@ -27,7 +28,7 @@ apis:
   revision: 1
   is_active_revision: false
 - openApiFile: users.json
-  policiesFile: users-policy.yaml
+  policyFile: users.policy.xml
   name: Users2
   shortName: users2
   prefix: users2
@@ -35,7 +36,7 @@ apis:
   revision: 2
   is_active_revision: true
 - openApiFile: users.json
-  policiesFile: users-policy.yaml
+  policyFile: users.policy.xml
   name: Users2
   shortName: users2
   prefix: users2
