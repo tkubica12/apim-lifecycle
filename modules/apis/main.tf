@@ -23,6 +23,7 @@ locals {
   manifest         = yamldecode(file(var.manifest))
   apis             = local.manifest.apis
   unique_api_names = distinct([for api in local.apis : api.shortName])
+  backends         = local.manifest.backends
   
   # Group duplicate keys with the grouping operator "..."
   unique_api_ids = {

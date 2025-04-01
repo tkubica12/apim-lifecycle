@@ -5,6 +5,9 @@ productTerms: |
   By using this API, you agree to the terms and conditions set forth by the API provider. 
   Please refer to the API documentation for more details.
 approvalRequired: true
+backends:
+- name: httpbin
+  url: https://httpbin.org/
 apis:
 - openApiFile: users.json
   policiesFile: users-policy.yaml
@@ -14,6 +17,7 @@ apis:
   version: "2025-01-01"
   revision: 1
   is_active_revision: true
+  backendUrl:
 - openApiFile: users.json
   policiesFile: users-policy.yaml
   name: Users2

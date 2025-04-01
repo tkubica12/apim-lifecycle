@@ -61,6 +61,7 @@ This repository demonstrates managing the lifecycle of Azure API Management (API
 
 Each API and product is configured using a manifest file (manifest.yaml) that includes:
 - Product metadata (name, display name, description, terms, approval requirements)
+- Backend configurations (name, URL)
 - OpenAPI specification file reference
 - Policy file reference (for API-specific policies)
 - API metadata (name, short name, prefix)
@@ -76,6 +77,9 @@ productTerms: |
   By using this API, you agree to the terms and conditions set forth by the API provider.
   Please refer to the API documentation for more details.
 approvalRequired: true
+backends:
+- name: httpbin
+  url: https://httpbin.org/
 apis:
 - openApiFile: users.json
   policiesFile: users-policy.yaml
@@ -86,6 +90,14 @@ apis:
   revision: 1
   is_active_revision: true
 ```
+
+### Backends
+
+Backends define the backend services that APIs connect to. Each backend is specified in the `backends` section of the manifest file with the following attributes:
+- `name`: The name of the backend.
+- `url`: The URL of the backend service.
+
+These backends can be referenced in API configurations to route traffic to the appropriate service.
 
 ### Products
 
