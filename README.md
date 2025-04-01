@@ -15,7 +15,8 @@ This repository demonstrates managing the lifecycle of Azure API Management (API
 │       │       ├── manifest.yaml      # API and product definition manifest
 │       │       ├── terragrunt.hcl     # Terragrunt configuration for this API
 │       │       ├── users.json         # OpenAPI specification file
-│       │       └── users-policy.yaml  # API policies definition
+│       │       ├── users.policy.xml   # API-level policy file
+│       │       └── product.policy.xml # Product-level policy file
 │       ├── base/                      # Base components for staging
 │       │   ├── terragrunt.hcl
 │       │   ├── apim/                  # API Management instance config
@@ -32,15 +33,17 @@ This repository demonstrates managing the lifecycle of Azure API Management (API
     │   ├── outputs.tf
     │   └── variables.tf
     ├── apis/                          # APIs and products module
-    │   ├── main.tf
-    │   ├── outputs.tf
+    │   ├── main.tf                    # Main module for APIs and products
+    │   ├── outputs.tf                 # Outputs for APIs and products
     │   ├── product.tf                 # Product resource definition
-    │   ├── variables.tf
+    │   ├── variables.tf               # Variables for APIs and products
     │   ├── version_set.tf             # API version set resource definition
+    │   ├── policies.tf                # Policies for APIs and products
     │   └── api/                       # Individual API module
-    │       ├── api.tf
-    │       ├── main.tf
-    │       └── variables.tf
+    │       ├── api.tf                 # API resource definition
+    │       ├── main.tf                # Main module for individual APIs
+    │       ├── variables.tf           # Variables for individual APIs
+    │       └── policies.tf            # Policies for individual APIs
     └── base_infra/                    # Base infrastructure module
         ├── locals.tf
         ├── main.tf
