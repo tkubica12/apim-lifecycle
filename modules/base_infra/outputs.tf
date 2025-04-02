@@ -44,4 +44,7 @@ output "resource_group_id" {
   value = azurerm_resource_group.main.id
 }
 
+output "keyvault_id" {
+  value = azurerm_key_vault.main.id
+}
 

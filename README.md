@@ -132,6 +132,9 @@ Subscriptions can be defined individually using YAML files placed in the `subscr
 - `name`: Unique identifier for the subscription.
 - `displayName`: Human-readable name for the subscription.
 - `allowTracing`: Boolean indicating whether tracing is enabled for the subscription.
+- `keyVaultId`: Azure Key Vault resource ID where subscription keys will be stored.
+- `primarySecretName`: Name of the secret in Key Vault for the primary subscription key.
+- `secondarySecretName`: Name of the secret in Key Vault for the secondary subscription key.
 
 Example subscription definition (`team1.yaml`):
 
@@ -139,9 +142,12 @@ Example subscription definition (`team1.yaml`):
 name: team1
 displayName: Team 1
 allowTracing: true
+keyVaultId: /subscriptions/{subscription-id}/resourceGroups/{resource-group}/providers/Microsoft.KeyVault/vaults/{keyvault-name}
+primarySecretName: team1-primary-key
+secondarySecretName: team1-secondary-key
 ```
 
-Terraform automatically picks up these subscription definitions and creates corresponding subscriptions in Azure API Management.
+Terraform automatically picks up these subscription definitions, creates corresponding subscriptions in Azure API Management, and stores the generated subscription keys securely in the specified Azure Key Vault secrets.
 
 ## Usage
 

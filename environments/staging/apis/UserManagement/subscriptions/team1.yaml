@@ -1,3 +1,7 @@
 name: team1
 displayName: Team 1
 allowTracing: true
+description: Team 1 subscription for User Management API
+keyvaultId: /subscriptions/673af34d-6b28-41dc-bc7b-f507418045e6/resourceGroups/rg-apim-staging-xizz/providers/Microsoft.KeyVault/vaults/kv-apim-staging-xizz
+keyvaultPrimarySecretName: UserManagement-Team1-PrimarySubscriptionKey
+keyvaultSecondarySecretName: UserManagement-Team1-SecondarySubscriptionKey
