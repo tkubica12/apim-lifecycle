@@ -31,6 +31,10 @@ locals {
       api_module.short_name => api_module.api_id ...
       if api_module.is_active
   }
+  subscriptions = { 
+    for sub_file in fileset("${var.folder_path}/subscriptions", "*.yaml") : 
+    yamldecode(file("${var.folder_path}/subscriptions/${sub_file}")).name => yamldecode(file("${var.folder_path}/subscriptions/${sub_file}"))
+  }
 }
 
 module "api" {
