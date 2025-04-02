@@ -16,7 +16,9 @@ This repository demonstrates managing the lifecycle of Azure API Management (API
 │       │       ├── terragrunt.hcl     # Terragrunt configuration for this API
 │       │       ├── users.json         # OpenAPI specification file
 │       │       ├── users.policy.xml   # API-level policy file
-│       │       └── product.policy.xml # Product-level policy file
+│       │       ├── product.policy.xml # Product-level policy file
+│       │       └── subscriptions/     # Subscription definitions
+│       │           ├── team1.yaml     # Example subscription definition for Team 1
 │       ├── base/                      # Base components for staging
 │       │   ├── terragrunt.hcl
 │       │   ├── apim/                  # API Management instance config
@@ -122,6 +124,24 @@ Products group APIs and define their access policies. The `product.tf` module ha
 APIs are versioned using a combination of `version` and `revision` fields in the manifest. The `version` field represents the API version (e.g., "2025-01-01"), while the `revision` field tracks changes within a version. The `is_active_revision` field indicates whether the revision is active.
 
 Terraform modules automatically handle version sets and associate APIs with their respective versions and revisions.
+
+### Subscriptions
+
+Subscriptions can be defined individually using YAML files placed in the `subscriptions` folder within each API configuration directory. Each subscription YAML file should contain the following attributes:
+
+- `name`: Unique identifier for the subscription.
+- `displayName`: Human-readable name for the subscription.
+- `allowTracing`: Boolean indicating whether tracing is enabled for the subscription.
+
+Example subscription definition (`team1.yaml`):
+
+```yaml
+name: team1
+displayName: Team 1
+allowTracing: true
+```
+
+Terraform automatically picks up these subscription definitions and creates corresponding subscriptions in Azure API Management.
 
 ## Usage
 
