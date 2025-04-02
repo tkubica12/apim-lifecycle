@@ -1,0 +1,8 @@
+@subscriptionId = 673af34d-6b28-41dc-bc7b-f507418045e6
+@resourceGroupName = rg-apim-staging-xizz
+@serviceName = apim-apim-staging-ampm
+@accessToken = {{$processEnv ACCESS_TOKEN}}
+
+
+GET https://management.azure.com/subscriptions/{{subscriptionId}}/resourceGroups/{{resourceGroupName}}/providers/Microsoft.ApiManagement/service/{{serviceName}}/portalRevisions?api-version=2024-06-01-preview
+Authorization: Bearer {{accessToken}}
