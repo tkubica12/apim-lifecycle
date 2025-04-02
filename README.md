@@ -41,6 +41,7 @@ This repository demonstrates managing the lifecycle of Azure API Management (API
     │   ├── variables.tf               # Variables for APIs and products
     │   ├── version_set.tf             # API version set resource definition
     │   ├── policies.tf                # Policies for APIs and products
+    │   ├── subscriptions.tf           # Subscriptions and keys
     │   └── api/                       # Individual API module
     │       ├── api.tf                 # API resource definition
     │       ├── main.tf                # Main module for individual APIs
