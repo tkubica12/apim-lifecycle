@@ -10,10 +10,11 @@ resource "azapi_resource" "apim" {
         minApiVersion = "2019-12-01"
       }
       # publicIpAddressId   = azurerm_public_ip.apim.id
-      publicNetworkAccess = "Enabled"
-      publisherName       = "My Company"
-      publisherEmail      = "company@company.local"
-      virtualNetworkType  = "External"
+      publicNetworkAccess   = "Enabled"
+      publisherName         = "My Company"
+      publisherEmail        = "company@company.local"
+      virtualNetworkType    = "External"
+      developerPortalStatus = "Enabled"
 
       virtualNetworkConfiguration = {
         subnetResourceId = var.subnet_id

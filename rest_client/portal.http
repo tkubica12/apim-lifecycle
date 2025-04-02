@@ -6,3 +6,8 @@
 
 GET https://management.azure.com/subscriptions/{{subscriptionId}}/resourceGroups/{{resourceGroupName}}/providers/Microsoft.ApiManagement/service/{{serviceName}}/portalRevisions?api-version=2024-06-01-preview
 Authorization: Bearer {{accessToken}}
+
+###
+
+GET https://management.azure.com/subscriptions/{{subscriptionId}}/resourceGroups/{{resourceGroupName}}/providers/Microsoft.ApiManagement/service/{{serviceName}}/portalconfigs?api-version=2024-06-01-preview
+Authorization: Bearer {{accessToken}}
