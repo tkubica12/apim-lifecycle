@@ -26,9 +26,10 @@ locals {
 EOF
 }
 
-resource "azapi_resource" "all_api_policy" {
-  type = "Microsoft.ApiManagement/service/policies@2024-06-01-preview"
-  name = "policy"
+resource "azapi_update_resource" "all_api_policy" {
+  type      = "Microsoft.ApiManagement/service/policies@2024-06-01-preview"
+  name      = "policy"
+  parent_id = azapi_resource.apim.id
   body = {
     properties = {
       format = "xml"

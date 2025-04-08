@@ -1,12 +1,3 @@
-terraform {
-  required_providers {
-    azapi = {
-      source  = "azure/azapi"
-      version = "~>2"
-    }
-  }
-}
-
 resource "random_string" "main" {
   length  = 4
   special = false
