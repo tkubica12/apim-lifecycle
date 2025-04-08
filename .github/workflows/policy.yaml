@@ -1,0 +1,26 @@
+name: Check OpenAPI Spec with Checkov
+on:
+  push:
+  pull_request:
+
+jobs:
+  checkov-scan:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+
+      - id: files
+        uses: jitterbit/get-changed-files@v1
+        with:
+          format: 'json'
+
+      - name: Install Checkov
+        run: pip install checkov
+
+      - name: Run Checkov on changed JSON files in apis folder
+        run: |
+          echo '${{ steps.files.outputs.all }}' | jq -r '.[]' | grep '^apis/.*\.json$' | while read file; do
+            echo "Running Checkov on $file"
+            checkov -f "$file" --framework openapi
+          done
+        shell: bash
