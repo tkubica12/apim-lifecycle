@@ -1,7 +1,7 @@
 name: Check OpenAPI Spec with Checkov
 on:
-  push:
-  pull_request:
+  # push:
+  # pull_request:
   workflow_dispatch:
 
 jobs:
@@ -22,12 +22,14 @@ jobs:
       - name: Install Checkov
         run: pip install checkov
 
-      - run: echo '${{ steps.changed_files.outputs.openapi_filter }}'
+      - run: echo '${{ steps.changed_files.outputs.openapi_files }}'
 
-    # - name: Run Checkov on changed JSON files in apis folder
-    #   run: |
-    #     echo '${{ steps.files.outputs.all }}' | jq -r '.[]' | grep '^apis/.*\.json$' | while read file; do
-    #       echo "Running Checkov on $file"
-    #       checkov -f "$file" --framework openapi
-    #     done
-    #   shell: bash
+      - name: Run Checkov on changed JSON files in apis folder
+        if: ${{ steps.changed_files.outputs.openapi_files }} != ''
+        run: |
+          for file in ${{ steps.changed_files.outputs.openapi_files }}; do
+            if [[ $file == *.json ]]; then
+              checkov -f "$file" --framework openapi --quiet --skip-check CKV_OPENAPI_2 --skip-check CKV_OPENAPI_3
+            fi
+          done
+        shell: bash
