@@ -21,7 +21,7 @@ jobs:
       - name: Install Checkov
         run: pip install checkov
 
-      - run: echo '${{ steps.changed_files.outputs.openapi_files }}'
+      - run: echo '${{ steps.changed_files.outputs.openapi }}'
 
     #   - name: Run Checkov on changed JSON files in apis folder
     #     run: |
