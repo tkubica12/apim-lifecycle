@@ -13,20 +13,21 @@ jobs:
       - uses: dorny/paths-filter@v3
         id: changed_files
         with:
-            filters: |
-                openapi:
-                    - 'environments/prod/apis/**'
-                    - 'environments/staging/apis/**'
+          list-files: shell
+          filters: |
+            openapi:
+              - 'environments/prod/apis/**'
+              - 'environments/staging/apis/**'
 
       - name: Install Checkov
         run: pip install checkov
 
-      - run: echo '${{ steps.changed_files.outputs.openapi }}'
+      - run: echo '${{ steps.changed_files.outputs.openapi_filter }}'
 
-    #   - name: Run Checkov on changed JSON files in apis folder
-    #     run: |
-    #       echo '${{ steps.files.outputs.all }}' | jq -r '.[]' | grep '^apis/.*\.json$' | while read file; do
-    #         echo "Running Checkov on $file"
-    #         checkov -f "$file" --framework openapi
-    #       done
-    #     shell: bash
+    # - name: Run Checkov on changed JSON files in apis folder
+    #   run: |
+    #     echo '${{ steps.files.outputs.all }}' | jq -r '.[]' | grep '^apis/.*\.json$' | while read file; do
+    #       echo "Running Checkov on $file"
+    #       checkov -f "$file" --framework openapi
+    #     done
+    #   shell: bash
