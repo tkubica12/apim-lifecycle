@@ -1,0 +1,21 @@
+productName: NewStuff
+productDisplayName: NewStuff
+productDescription: NewStuff API for managing user accounts and profiles.
+productTerms: |
+  By using this API, you agree to the terms and conditions set forth by the API provider. 
+  Please refer to the API documentation for more details.
+productPolicyFile: product.policy.xml  
+approvalRequired: true
+backends:
+- name: httpbin
+  url: https://httpbin.org/
+apis:
+- openApiFile: users.json
+  policyFile: users.policy.xml
+  name: Users
+  shortName: users
+  prefix: users
+  version: "2025-01-01"
+  revision: 1
+  is_active_revision: true
+  backendUrl:
