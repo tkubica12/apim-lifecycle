@@ -1,0 +1,53 @@
+name: Check OpenAPI Spec with Checkov
+on:
+  # push:
+  pull_request:
+  workflow_dispatch:
+permissions:
+  contents: write
+  issues: write
+  pull-requests: write
+
+jobs:
+  checkov-scan:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Get changed files
+        uses: dorny/paths-filter@v3
+        id: changed_files
+        with:
+          list-files: shell
+          filters: |
+            openapi:
+              - 'environments/prod/apis/**'
+              - 'environments/staging/apis/**'
+
+      - name: Install Checkov
+        if: ${{ steps.changed_files.outputs.openapi_files }} != ''
+        run: pip install checkov
+
+      - name: Run Checkov on changed JSON files in apis folder
+        if: ${{ steps.changed_files.outputs.openapi_files }} != ''
+        id: checkov
+        run: |
+          report=""
+          for file in ${{ steps.changed_files.outputs.openapi_files }}; do
+            if [[ $file == *.json ]]; then
+              out=$(checkov -f "$file" --framework openapi --quiet -o github_failed_only --soft-fail --skip-download)
+              report="${report}\n${out}"
+            fi
+          done
+          echo -e "report<<EOF\n${report}\nEOF" >> $GITHUB_OUTPUT
+        shell: bash
+
+      - name: Create or update PR comment with Checkov findings
+        if: ${{ steps.changed_files.outputs.openapi_files }} != ''
+        uses: peter-evans/create-or-update-comment@v4
+        with:
+          issue-number: ${{ github.event.pull_request.number }}
+          body: |
+            ${{ steps.checkov.outputs.report }}
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

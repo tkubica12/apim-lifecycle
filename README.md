@@ -150,6 +150,18 @@ secondarySecretName: team1-secondary-key
 
 Terraform automatically picks up these subscription definitions, creates corresponding subscriptions in Azure API Management, and stores the generated subscription keys securely in the specified Azure Key Vault secrets.
 
+## Process for API Changes on Pull Requests
+
+When an API change is proposed via a Pull Request, two automated checks are triggered:
+
+- **Security Check with Checkov**  
+  This step scans changed OpenAPI specification files to detect security issues. If any issues are found, the GitHub Action automatically comments on the PR with the findings.
+
+- **Breaking Change Detection with oasdiff**  
+  This step analyzes changes in OpenAPI specs by comparing them against the main branch. It documents and highlights any potential breaking changes by posting a detailed report as a PR comment.
+
+These automated checks ensure that any API modifications adhere to security policies and maintain backward compatibility.
+
 ## Usage
 
 ### Prerequisites
