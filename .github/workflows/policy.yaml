@@ -32,19 +32,20 @@ jobs:
         run: |
           for file in ${{ steps.changed_files.outputs.openapi_files }}; do
             if [[ $file == *.json ]]; then
-              checkov -f "$file" --framework openapi --quiet -o cli -o github_failed_only --soft-fail --skip-download
+              checkov -f "$file" --framework openapi --quiet -o cli -o github_failed_only --soft-fail --skip-download | tee -a report.txt
             fi
           done
         shell: bash
 
-      - name: Add Checkov findings as PR comment
+      - name: Create or update PR comment with Checkov findings
         if: ${{ steps.changed_files.outputs.openapi_files }} != ''
-        uses: marocchino/sticky-pull-request-comment@v2
+        uses: peter-evans/create-or-update-comment@v4
         with:
-          header: Checkov Findings
-          message: |
-            \`\`\`
-            $(cat checkov_report.txt)
-            \`\`\`
+          issue-number: ${{ github.event.pull_request.number }}
+          body: |
+            **Checkov Findings**
+            ```
+            $(cat report.txt)
+            ```
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
