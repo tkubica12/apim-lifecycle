@@ -13,6 +13,9 @@ jobs:
         with:
           fetch-depth:
 
+      - name: Install @azure/oad package
+        run: npm i @azure/oad
+
       - name: Fetch main branch
         run: git fetch origin main
 
@@ -26,7 +29,13 @@ jobs:
               - 'environments/prod/apis/**' 
               - 'environments/staging/apis/**'
 
-      - run: |
+      - name: Install @azure/oad package
+        if: ${{ steps.changed_files.outputs.openapi_files }} != ''
+        run: npm i @azure/oad
+
+      - name: Detect braking changes in OpenAPI spec
+        if: ${{ steps.changed_files.outputs.openapi_files }} != ''
+        run: |
           for file in ${{ steps.changed_files.outputs.openapi_files }}; do
             if [[ $file == *.json ]]; then
               echo "CHANGED FILE VERSION:"
