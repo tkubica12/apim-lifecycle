@@ -1,6 +1,8 @@
 name: Infra deployment with Terragrunt
 on:
   push:
+    branches:
+      - main
     paths:
       - 'environments/staging/base/**'
   workflow_dispatch:

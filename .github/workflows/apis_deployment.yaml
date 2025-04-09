@@ -1,6 +1,8 @@
 name: APIs deployment with Terragrunt
 on:
   push:
+    branches:
+      - main
     paths:
       - 'environments/staging/apis/**'
   workflow_dispatch:
