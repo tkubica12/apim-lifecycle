@@ -1,0 +1,6 @@
+name: team3
+displayName: Team 3
+allowTracing: true
+keyvaultId: /subscriptions/673af34d-6b28-41dc-bc7b-f507418045e6/resourceGroups/rg-apim-staging-khsp/providers/Microsoft.KeyVault/vaults/kv-apim-staging-khsp
+keyvaultPrimarySecretName: UserManagement-Team2-PrimarySubscriptionKey
+keyvaultSecondarySecretName: UserManagement-Team2-SecondarySubscriptionKey
