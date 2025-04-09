@@ -212,7 +212,7 @@
             "description": "Username of the user."
           },
           "name": {
-            "type": "string",
+            "type": "integer",
             "description": "Full name of the user."
           },
           "address": {
