@@ -43,7 +43,6 @@ jobs:
         run: |
           curl -L -o terragrunt "https://github.com/gruntwork-io/terragrunt/releases/download/v${{ env.TG_VERSION }}/terragrunt_linux_amd64"
           chmod +x terragrunt
-          mv terragrunt ${{ github.workspace }}
 
       - name: 'Run Terragrunt Plan on infra'
         run: |
@@ -81,7 +80,6 @@ jobs:
         run: |
           curl -L -o terragrunt "https://github.com/gruntwork-io/terragrunt/releases/download/v${{ env.TG_VERSION }}/terragrunt_linux_amd64"
           chmod +x terragrunt
-          mv terragrunt ${{ github.workspace }}
 
       - name: Download Terraform Plan Artifact
         uses: actions/download-artifact@v4
