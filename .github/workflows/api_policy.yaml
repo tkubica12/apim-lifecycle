@@ -39,6 +39,10 @@ jobs:
               report="${report}\n${out}"
             fi
           done
+          # Add check if report is empty and set default message
+          if [[ -z "$(echo -e "$report" | tr -d '\n')" ]]; then
+            report="No changes in OpenAPI specs detected"
+          fi
           echo -e "report<<EOF\n${report}\nEOF" >> $GITHUB_OUTPUT
         shell: bash
 
@@ -48,6 +52,7 @@ jobs:
         with:
           issue-number: ${{ github.event.pull_request.number }}
           body: |
+            ### OpenAPI Spec Checkov Findings
             ${{ steps.checkov.outputs.report }}
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

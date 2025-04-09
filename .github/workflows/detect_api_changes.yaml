@@ -15,10 +15,7 @@ jobs:
       - name: Checkout Code
         uses: actions/checkout@v3
         with:
-          fetch-depth:
-
-      - name: Install @azure/oad package
-        run: npm i @azure/oad
+          fetch-depth: 0
 
       - name: Fetch main branch
         run: git fetch origin main
@@ -50,6 +47,10 @@ jobs:
               report="${report}\n${out}"
             fi
           done
+          # Add check if report is empty and set default message
+          if [[ -z "$(echo -e "$report" | tr -d '\n')" ]]; then
+            report="No changes in OpenAPI specs detected"
+          fi
           echo -e "report<<EOF\n${report}\nEOF" >> $GITHUB_OUTPUT
         shell: bash
 
