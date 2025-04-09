@@ -1,7 +1,7 @@
 name: Check OpenAPI Spec with Checkov
 on:
   # push:
-  # pull_request:
+  pull_request:
   workflow_dispatch:
 
 jobs:
@@ -10,7 +10,8 @@ jobs:
     steps:
       - uses: actions/checkout@v3
 
-      - uses: dorny/paths-filter@v3
+      - name: Get changed files
+        uses: dorny/paths-filter@v3
         id: changed_files
         with:
           list-files: shell
@@ -20,16 +21,15 @@ jobs:
               - 'environments/staging/apis/**'
 
       - name: Install Checkov
+        if: ${{ steps.changed_files.outputs.openapi_files }} != ''
         run: pip install checkov
-
-      - run: echo '${{ steps.changed_files.outputs.openapi_files }}'
 
       - name: Run Checkov on changed JSON files in apis folder
         if: ${{ steps.changed_files.outputs.openapi_files }} != ''
         run: |
           for file in ${{ steps.changed_files.outputs.openapi_files }}; do
             if [[ $file == *.json ]]; then
-              checkov -f "$file" --framework openapi --quiet --skip-check CKV_OPENAPI_2 --skip-check CKV_OPENAPI_3
+              checkov -f "$file" --framework openapi --quiet -o cli -o github_failed_only --soft-fail --skip-download
             fi
           done
         shell: bash

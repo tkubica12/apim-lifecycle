@@ -1,0 +1,33 @@
+name: Detect breaking OpenAPI changes with OpenAPI Diff
+on:
+  # push:
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  openapi-diff:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Get changed files
+        uses: dorny/paths-filter@v3
+        id: changed_files
+        with:
+          list-files: shell
+          filters: |
+            openapi:
+              - 'environments/prod/apis/**' 
+              - 'environments/staging/apis/**'
+      
+      - run: |
+          for file in ${{ steps.changed_files.outputs.openapi_files }}; do
+            if [[ $file == *.json ]]; then
+              cat $file
+              echo "\n\nORIGINAL VERSION:"
+              git show origin/main:$file
+            fi
+          done
+        shell: bash
+      
+
