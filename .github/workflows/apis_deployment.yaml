@@ -1,0 +1,116 @@
+name: APIs deployment with Terragrunt
+on:
+  push:
+    paths:
+      - 'environments/staging/apis/**'
+  workflow_dispatch:
+
+env:
+  TF_VERSION: '1.11.3'
+  TG_VERSION: '0.77.11'
+  ARM_USE_OIDC: true
+  ARM_CLIENT_ID: ${{ secrets.AZURE_CLIENT_ID }}
+  ARM_SUBSCRIPTION_ID: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+  ARM_TENANT_ID: ${{ secrets.AZURE_TENANT_ID }}
+
+permissions:
+  contents: write
+  id-token: write
+  pull-requests: write
+
+jobs:
+  apis-plan:
+    runs-on: ubuntu-latest
+    environment: staging-preflight
+    outputs:
+      subfolders: ${{ steps.detect_subfolders.outputs.subfolders }}
+    steps:
+      - name: 'Checkout code'
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Detect changed files
+        uses: dorny/paths-filter@v3
+        id: changed_files
+        with:
+          list-files: shell
+          filters: |
+            apis:
+              - 'environments/staging/apis/**'
+
+      - name: Extract unique subfolders
+        id: detect_subfolders
+        run: |
+          subfolders=$(echo "${{ steps.changed_files.outputs.apis_files }}" | xargs -n1 dirname | sed 's|environments/staging/apis/||' | cut -d'/' -f1 | sort -u | jq -R -s -c 'split("\n")[:-1]')
+          echo "subfolders=$subfolders" >> $GITHUB_OUTPUT
+
+      - name: 'Az CLI login'
+        uses: azure/login@v2
+        with:
+          client-id: ${{ secrets.AZURE_CLIENT_ID }}
+          tenant-id: ${{ secrets.AZURE_TENANT_ID }}
+          subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+
+      - name: 'Setup Terraform'
+        uses: hashicorp/setup-terraform@v3
+        with:
+          terraform_wrapper: false
+          terraform_version: ${{ env.TF_VERSION }}
+
+      - name: 'Install Terragrunt'
+        run: |
+          curl -L -o ${{ github.workspace }}/terragrunt "https://github.com/gruntwork-io/terragrunt/releases/download/v${{ env.TG_VERSION }}/terragrunt_linux_amd64"
+          chmod +x ${{ github.workspace }}/terragrunt
+
+      - name: 'Run Terragrunt Plan on changed APIs'
+        run: |
+          for folder in $(echo '${{ steps.detect_subfolders.outputs.subfolders }}' | jq -r '.[]'); do
+            cd "${{ github.workspace }}/environments/staging/apis/$folder"
+            ${{ github.workspace }}/terragrunt plan -out="${{ github.workspace }}/$folder.tfplan"
+          done
+
+      - name: Upload Terraform Plans
+        uses: actions/upload-artifact@v4
+        with:
+          name: apis-terraform-plans
+          path: ${{ github.workspace }}/*.tfplan
+
+  apis-deploy:
+    needs: apis-plan
+    runs-on: ubuntu-latest
+    environment: staging
+    steps:
+      - name: 'Checkout code'
+        uses: actions/checkout@v4
+
+      - name: 'Az CLI login'
+        uses: azure/login@v2
+        with:
+          client-id: ${{ secrets.AZURE_CLIENT_ID }}
+          tenant-id: ${{ secrets.AZURE_TENANT_ID }}
+          subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+
+      - name: 'Setup Terraform'
+        uses: hashicorp/setup-terraform@v3
+        with:
+          terraform_wrapper: false
+          terraform_version: ${{ env.TF_VERSION }}
+
+      - name: 'Install Terragrunt'
+        run: |
+          curl -L -o ${{ github.workspace }}/terragrunt "https://github.com/gruntwork-io/terragrunt/releases/download/v${{ env.TG_VERSION }}/terragrunt_linux_amd64"
+          chmod +x ${{ github.workspace }}/terragrunt
+
+      - name: Download Terraform Plan Artifacts
+        uses: actions/download-artifact@v4
+        with:
+          name: apis-terraform-plans
+          path: ${{ github.workspace }}
+
+      - name: 'Run Terragrunt Apply on changed APIs'
+        run: |
+          for folder in $(echo '${{ needs.apis-plan.outputs.subfolders }}' | jq -r '.[]'); do
+            cd "${{ github.workspace }}/environments/staging/apis/$folder"
+            ${{ github.workspace }}/terragrunt apply "${{ github.workspace }}/$folder.tfplan"
+          done
