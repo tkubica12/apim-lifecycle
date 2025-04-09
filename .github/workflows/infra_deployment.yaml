@@ -41,16 +41,16 @@ jobs:
           tg_dir: ./environments/staging/base/infra
           tg_add_approve: true
           tg_comment: false
-          tg_command: 'plan -out base.tfplan'
+          tg_command: 'plan -out /github/workspace/base.tfplan'
 
-      - name: Find all tfplan files
-        run: find . -name '*.tfplan' 2>/dev/null || true
+      - name: debug
+        run: ls -lah /github/workspace
 
       - name: Upload Terraform Plan Artifact
         uses: actions/upload-artifact@v4
         with:
           name: terraform-plan
-          path: ./base.tfplan
+          path: /github/workspace/base.tfplan
 
   infra-deploy:
     needs: infra-plan
