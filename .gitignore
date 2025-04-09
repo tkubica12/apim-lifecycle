@@ -39,3 +39,7 @@ environments/staging/terraform/.terraform.lock.hcl
 
 .terragrunt-cache
 .terraform.lock.hcl
+
+node_modules/
+package-lock.json
+package.json

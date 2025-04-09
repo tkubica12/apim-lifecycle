@@ -29,21 +29,46 @@ jobs:
               - 'environments/prod/apis/**' 
               - 'environments/staging/apis/**'
 
-      - name: Install @azure/oad package
+      - name: Install oasdiff
         if: ${{ steps.changed_files.outputs.openapi_files }} != ''
-        run: npm i @azure/oad
+        run: curl -fsSL https://raw.githubusercontent.com/oasdiff/oasdiff/main/install.sh | sh
 
-      - name: Detect braking changes in OpenAPI spec
+      # - name: Detect changes in OpenAPI spec
+      #   if: ${{ steps.changed_files.outputs.openapi_files }} != ''
+      #   run: |
+      #     for file in ${{ steps.changed_files.outputs.openapi_files }}; do
+      #       if [[ $file == *.json ]]; then
+      #         echo "CHANGED FILE VERSION:"
+      #         cat $file
+      #         echo "\n\nORIGINAL VERSION FROM MAIN:"
+      #         git show origin/main:"$file" || echo "File $file not found in main"
+      #       fi
+      #     done
+      #   shell: bash
+
+      - name: Detect changes in OpenAPI spec
         if: ${{ steps.changed_files.outputs.openapi_files }} != ''
+        id: oasdiff
         run: |
+          report=""
           for file in ${{ steps.changed_files.outputs.openapi_files }}; do
             if [[ $file == *.json ]]; then
-              echo "CHANGED FILE VERSION:"
-              cat $file
-              echo "\n\nORIGINAL VERSION FROM MAIN:"
-              git show origin/main:"$file" || echo "File $file not found in main"
+              git show origin/main:"$file" > /tmp/original.json || touch /tmp/original.json
+              oasdiff changelog -f githubactions "$file" /tmp/original.json
+              out=$(oasdiff changelog -f markdown "$file" /tmp/original.json)
+              report="${report}\n${out}"
             fi
           done
+          echo -e "report<<EOF\n${report}\nEOF" >> $GITHUB_OUTPUT
         shell: bash
 
+      - name: Create or update PR comment with OAS Diff findings
+        if: ${{ steps.changed_files.outputs.openapi_files }} != ''
+        uses: peter-evans/create-or-update-comment@v4
+        with:
+          issue-number: ${{ github.event.pull_request.number }}
+          body: |
+            ${{ steps.oasdiff.outputs.report }}
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
