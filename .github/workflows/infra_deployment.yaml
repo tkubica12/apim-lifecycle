@@ -7,7 +7,7 @@ on:
 
 env:
   TF_VERSION: '1.11.3'
-  TG_VERSION: 'v0.77.11'
+  TG_VERSION: '0.77.11'
   ARM_USE_OIDC: true
   ARM_CLIENT_ID: ${{ secrets.AZURE_CLIENT_ID }}
   ARM_SUBSCRIPTION_ID: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
@@ -47,7 +47,6 @@ jobs:
       - name: 'Run Terragrunt Plan on infra'
         run: |
           cd ./environments/staging/base/infra
-          chmod +x ${{ github.workspace }}/terragrunt
           ${{ github.workspace }}/terragrunt plan -out=${{ github.workspace }}/infra.tfplan
 
       - name: Upload Terraform Plans
@@ -79,8 +78,8 @@ jobs:
 
       - name: 'Install Terragrunt'
         run: |
-          curl -L -o terragrunt "https://github.com/gruntwork-io/terragrunt/releases/download/v${{ env.TG_VERSION }}/terragrunt_linux_amd64"
-          chmod +x terragrunt
+          curl -L -o ${{ github.workspace }}/terragrunt "https://github.com/gruntwork-io/terragrunt/releases/download/v${{ env.TG_VERSION }}/terragrunt_linux_amd64"
+          chmod +x ${{ github.workspace }}/terragrunt
 
       - name: Download Terraform Plan Artifact
         uses: actions/download-artifact@v4
@@ -91,4 +90,4 @@ jobs:
       - name: 'Run Terragrunt Apply on infra'
         run: |
           cd ./environments/staging/base/infra
-          ${{ github.workspace }}/terragrunt apply ${{ github.workspace }}/infra.tfplan 
+          ${{ github.workspace }}/terragrunt apply ${{ github.workspace }}/infra.tfplan
