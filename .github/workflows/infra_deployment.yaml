@@ -1,6 +1,8 @@
 name: Infra deployment with Terragrunt
 on:
-  pull_request:
+  push:
+    paths:
+      - 'environments/staging/base/**'
   workflow_dispatch:
 
 env:
@@ -17,9 +19,9 @@ permissions:
   pull-requests: write
 
 jobs:
-  infra-deployment:
+  infra-plan:
     runs-on: ubuntu-latest
-    environment: staging
+    environment: staging-preflight
     steps:
       - name: 'Checkout code'
         uses: actions/checkout@v4
@@ -36,7 +38,42 @@ jobs:
         with:
           tf_version: ${{ env.tf_version }}
           tg_version: ${{ env.tg_version }}
-          tg_dir: ./environments/staging/base
+          tg_dir: ./environments/staging/base/infra
           tg_add_approve: true
           tg_comment: false
-          tg_command: 'run-all plan'
+          tg_command: 'plan -out plan.tfplan'
+
+      - name: Upload Terraform Plan Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: terraform-plan
+          path: ./environments/staging/base/infra/plan.tfplan
+
+  infra-deploy:
+    needs: infra-plan
+    runs-on: ubuntu-latest
+    environment: staging
+    steps:
+      - name: 'Checkout code'
+        uses: actions/checkout@v4
+
+      - name: 'Az CLI login'
+        uses: azure/login@v2
+        with:
+          client-id: ${{ secrets.AZURE_CLIENT_ID }}
+          tenant-id: ${{ secrets.AZURE_TENANT_ID }}
+          subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+
+      - name: Download Terraform Plan Artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: terraform-plan
+          path: ./environments/staging/base/infra
+
+      - name: Deploy
+        uses: gruntwork-io/terragrunt-action@v2
+        with:
+          tf_version: ${{ env.tf_version }}
+          tg_version: ${{ env.tg_version }}
+          tg_dir: ./environments/staging/base/infra
+          tg_command: apply plan.tfplan
