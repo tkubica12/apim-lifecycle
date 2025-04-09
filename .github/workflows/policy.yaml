@@ -48,9 +48,6 @@ jobs:
         with:
           issue-number: ${{ github.event.pull_request.number }}
           body: |
-            **Checkov Findings**
-            ```
             ${{ steps.checkov.outputs.report }}
-            ```
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
