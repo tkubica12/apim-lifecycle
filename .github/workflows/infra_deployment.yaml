@@ -49,6 +49,11 @@ jobs:
           cd ./environments/staging/base/infra
           ${{ github.workspace }}/terragrunt plan -out=${{ github.workspace }}/infra.tfplan
 
+      - name: 'Run Terragrunt Plan on apim'
+        run: |
+          cd ./environments/staging/base/apim
+          ${{ github.workspace }}/terragrunt plan -out=${{ github.workspace }}/apim.tfplan
+
       - name: Upload Terraform Plans
         uses: actions/upload-artifact@v4
         with:
@@ -91,3 +96,8 @@ jobs:
         run: |
           cd ./environments/staging/base/infra
           ${{ github.workspace }}/terragrunt apply ${{ github.workspace }}/infra.tfplan
+
+      - name: 'Run Terragrunt Apply on apim'
+        run: |
+          cd ./environments/staging/base/apim
+          ${{ github.workspace }}/terragrunt apply ${{ github.workspace }}/apim.tfplan
