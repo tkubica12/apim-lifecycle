@@ -7,7 +7,7 @@ on:
 
 env:
   TF_VERSION: '1.11.3'
-  TG_VERSION: 'v0.63.6'
+  TG_VERSION: 'v0.77.11'
   ARM_USE_OIDC: true
   ARM_CLIENT_ID: ${{ secrets.AZURE_CLIENT_ID }}
   ARM_SUBSCRIPTION_ID: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
@@ -47,6 +47,7 @@ jobs:
       - name: 'Run Terragrunt Plan on infra'
         run: |
           cd ./environments/staging/base/infra
+          chmod +x ${{ github.workspace }}/terragrunt
           ${{ github.workspace }}/terragrunt plan -out=${{ github.workspace }}/infra.tfplan
 
       - name: Upload Terraform Plans
