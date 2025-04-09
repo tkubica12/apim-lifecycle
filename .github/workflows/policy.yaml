@@ -33,3 +33,15 @@ jobs:
             fi
           done
         shell: bash
+
+      - name: Add Checkov findings as PR comment
+        if: ${{ steps.changed_files.outputs.openapi_files }} != ''
+        uses: marocchino/sticky-pull-request-comment@v2
+        with:
+          header: Checkov Findings
+          message: |
+            \`\`\`
+            $(cat checkov_report.txt)
+            \`\`\`
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
