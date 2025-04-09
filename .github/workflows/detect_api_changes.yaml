@@ -1,4 +1,4 @@
-name: Detect breaking OpenAPI changes with OpenAPI Diff
+name: Detect changes in OpenAPI sepcs
 on:
   # push:
   pull_request:
@@ -9,7 +9,7 @@ permissions:
   pull-requests: write
   
 jobs:
-  openapi-diff:
+  openapi-changes:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout Code
@@ -36,19 +36,6 @@ jobs:
       - name: Install oasdiff
         if: ${{ steps.changed_files.outputs.openapi_files }} != ''
         run: curl -fsSL https://raw.githubusercontent.com/oasdiff/oasdiff/main/install.sh | sh
-
-      # - name: Detect changes in OpenAPI spec
-      #   if: ${{ steps.changed_files.outputs.openapi_files }} != ''
-      #   run: |
-      #     for file in ${{ steps.changed_files.outputs.openapi_files }}; do
-      #       if [[ $file == *.json ]]; then
-      #         echo "CHANGED FILE VERSION:"
-      #         cat $file
-      #         echo "\n\nORIGINAL VERSION FROM MAIN:"
-      #         git show origin/main:"$file" || echo "File $file not found in main"
-      #       fi
-      #     done
-      #   shell: bash
 
       - name: Detect changes in OpenAPI spec
         if: ${{ steps.changed_files.outputs.openapi_files }} != ''
