@@ -12,8 +12,9 @@ env:
   ARM_TENANT_ID: ${{ secrets.AZURE_TENANT_ID }}
 
 permissions:
-  contents: read
+  contents: write
   id-token: write
+  pull-requests: write
 
 jobs:
   infra-deployment:
@@ -36,4 +37,6 @@ jobs:
           tf_version: ${{ env.tf_version }}
           tg_version: ${{ env.tg_version }}
           tg_dir: ./environments/staging/base
-          tg_command: 'plan'
+          tg_add_approve: true
+          tg_comment: false
+          tg_command: 'run-all plan'
