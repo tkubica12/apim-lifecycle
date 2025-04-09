@@ -37,6 +37,7 @@
           "required": true,
           "content": {
             "application/json": {
+              "schema": { "$ref": "#/components/schemas/NewUser" },
               "example": {
                 "username": "jdoe",
                 "name": "John Doe",
@@ -121,6 +122,7 @@
           "required": true,
           "content": {
             "application/json": {
+              "schema": { "$ref": "#/components/schemas/UpdateUser" },
               "example": {
                 "username": "jdoe",
                 "name": "John Doe Updated",
@@ -180,13 +182,9 @@
   },
   "components": {
     "schemas": {
-      "User": {
+      "NewUser": {
         "type": "object",
         "properties": {
-          "id": {
-            "type": "string",
-            "description": "Unique identifier for the user."
-          },
           "username": {
             "type": "string",
             "description": "Username of the user."
@@ -205,7 +203,28 @@
           }
         },
         "required": ["username", "name", "address", "email"]
+      },
+      "UpdateUser": {
+        "type": "object",
+        "properties": {
+          "username": {
+            "type": "string",
+            "description": "Username of the user."
+          },
+          "name": {
+            "type": "string",
+            "description": "Full name of the user."
+          },
+          "address": {
+            "type": "string",
+            "description": "Address of the user."
+          },
+          "email": {
+            "type": "string",
+            "description": "Email address of the user."
+          }
+        }
       }
     }
   }
-} 
+}
