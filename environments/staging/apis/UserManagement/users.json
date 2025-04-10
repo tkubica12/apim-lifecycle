@@ -208,7 +208,7 @@
         "type": "object",
         "properties": {
           "username": {
-            "type": "string",
+            "type": "integer",
             "description": "Username of the user."
           },
           "name": {
