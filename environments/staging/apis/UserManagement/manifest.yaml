@@ -42,11 +42,3 @@ apis:
   version: "2025-02-01"
   revision: 1
   is_active_revision: true
-- openApiFile: users.json
-  policyFile: users.policy.xml
-  name: Users2
-  shortName: users2
-  prefix: users2
-  version: "2025-02-01"
-  revision: 2
-  is_active_revision: false
